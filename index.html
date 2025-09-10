@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <form>
+    <label for="Message">Message:</label><br>
+    <input type="text" id="inputMessage" name="inMessage"><br>
+    <label for="phone">Phone Number:</label><br>
+    <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+    
+  </form>
+  <script>
+    fetch('https://script.google.com/macros/s/AKfycbyA2Bol3BJyduDhVMsDx3QtkF1TyXUKDn25XkGBLcyotvbT7LcXh7fHG1QYaWXGaAoh/exec', {
+      method: 'POST',
+      body: JSON.stringify({value: "Hello from my website!"}),
+      headers: {'Content-Type': 'application/json'}
+    })
+    .then(res => res.text())
+    .then(alert);
+  </script>
+</html>
