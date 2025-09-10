@@ -7,13 +7,17 @@
     <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
     
   </form>
-  <script>
-    fetch('https://script.google.com/macros/s/AKfycbygzXDMjHW1JfU9dXlNvVG1nwxQ2jPxT1WrJ80X36-NaIs7p3IxyVoE3bF1Kh8y4Q1G/exec', {
-      method: 'POST',
-      body: JSON.stringify({value: "Hello from my website!"}),
-      headers: {'Content-Type': 'application/json'}
-    })
-    .then(res => res.text())
-    .then(alert);
-  </script>
+  <button id="sendToSheet">Send to Google Sheet</button>
+<script>
+document.getElementById('sendToSheet').addEventListener('click', function() {
+  fetch('https://script.google.com/macros/s/AKfycbygzXDMjHW1JfU9dXlNvVG1nwxQ2jPxT1WrJ80X36-NaIs7p3IxyVoE3bF1Kh8y4Q1G/exec', {
+    method: 'POST',
+    body: JSON.stringify({value: "Hello from my website!"}),
+    headers: {'Content-Type': 'application/json'}
+  })
+  .then(res => res.text())
+  .then(alert)
+  .catch(console.error);
+});
+</script>
 </html>
