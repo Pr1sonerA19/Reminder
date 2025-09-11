@@ -20,11 +20,9 @@ document.getElementById('sendToSheet').addEventListener('click', function() {
     return;
   }
 
-  // Combine fields as plain text, separated by a delimiter (e.g. |)
-  // Or send as JSON if you update your Apps Script (see below)
   var combined = message + "|" + datetime;
 
-  fetch('https://script.google.com/macros/s/AKfycbxUiMgw8cyE0RXk-FRM1PRciq556n1NMZsOUHHLCtCcjAMs6WQhvg5bymfh1mBxEoeF/exec', {
+  fetch('https://script.google.com/macros/s/AKfycbyl3pQaEdwTjzieBtNMqgrAWjcS07DCQX1e_bPoYPiuqdejY5W2SOHFI7lc8MRWBA-w/exec', {
     method: 'POST',
     headers: {
       'Content-Type': 'text/plain;charset=utf-8'
