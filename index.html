@@ -13,9 +13,9 @@ document.getElementById('sendToSheet').addEventListener('click', function() {
   fetch('https://script.google.com/macros/s/AKfycbxy_07hQaf8c8lO0PeIqaMfaR88b1clRGHCiB_rWa4xEwMeveaCKh0XXvmUHbeE-vkx/exec', {
   method: 'POST',
   headers: {
-    'Content-Type': 'text/plain;charset=utf-8',
+    'Content-Type': 'text/plain;charset=utf-8'
   },
-  body: "Hello"
+  body: 'Hello'
 })
   .then(res => res.text())
   .then(alert)
