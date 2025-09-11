@@ -24,7 +24,7 @@ document.getElementById('sendToSheet').addEventListener('click', function() {
   // Or send as JSON if you update your Apps Script (see below)
   var combined = message + "|" + datetime;
 
-  fetch('https://script.google.com/macros/s/AKfycbxy_07hQaf8c8lO0PeIqaMfaR88b1clRGHCiB_rWa4xEwMeveaCKh0XXvmUHbeE-vkx/exec', {
+  fetch('https://script.google.com/macros/s/AKfycbxUiMgw8cyE0RXk-FRM1PRciq556n1NMZsOUHHLCtCcjAMs6WQhvg5bymfh1mBxEoeF/exec', {
     method: 'POST',
     headers: {
       'Content-Type': 'text/plain;charset=utf-8'
