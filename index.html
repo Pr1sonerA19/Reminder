@@ -5,22 +5,25 @@
     <input type="text" id="inputMessage" name="inMessage"><br>
     <label for="phone">Phone Number:</label><br>
     <input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
-    
   </form>
   <button id="sendToSheet">Send to Google Sheet</button>
 <script>
 document.getElementById('sendToSheet').addEventListener('click', function() {
-  var message = document.getElementByID("inputMessage").value;
+  var message = document.getElementById('inputMessage').value.trim();
+  if (!message) {
+    alert('Please enter a message before sending!');
+    return; // Cancel the fetch if there's no message
+  }
   fetch('https://script.google.com/macros/s/AKfycbxy_07hQaf8c8lO0PeIqaMfaR88b1clRGHCiB_rWa4xEwMeveaCKh0XXvmUHbeE-vkx/exec', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'text/plain;charset=utf-8'
-  },
-  body: message
-})
-  .then(res => res.text())
-  .then(alert)
-  .catch(console.error);
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: message
+  })
+    .then(res => res.text())
+    .then(alert)
+    .catch(console.error);
 });
 </script>
 </html>
