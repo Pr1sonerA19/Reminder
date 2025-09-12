@@ -31,7 +31,8 @@ document.getElementById('sendToSheet').addEventListener('click', function() {
   var combined = message + "|" + formattedDate + "|" + formattedTime;
   fetch('https://ntfy.xmtp.net/prisoner', {
     method: 'POST', // PUT works too
-    body: 'Backup successful 😀'
+    body: 'Backup successful 😀',
+    'Authorization':'Bearer tk_3cnt28tkfrnb9agjvsnqm8o1nmco8'
 })
   fetch('https://script.google.com/macros/s/AKfycbyaW2AV4Vd2d0oMxmE_NYnNrT9HdeFhrTXPpRFU8j2Yic6Xyo9TbJaBugIuVMSo_HKK/exec', {
     method: 'POST',
