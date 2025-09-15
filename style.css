@@ -9,6 +9,7 @@
 }
 
 .glitch-form-wrapper {
+  height:100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,7 +27,7 @@
     0 0 20px rgba(0, 242, 234, 0.1),
     inset 0 0 10px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  margin: 1rem;
+  margin: auto;
 }
 
 .card-header {
