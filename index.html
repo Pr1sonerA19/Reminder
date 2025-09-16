@@ -11,8 +11,14 @@
             <input type="text" id="message" name="message"><br>
         <label for=datetime">DATE TIME:</label><br>
             <input type="datetime-local" id="datetime" name="datetime"><br>
-        <br>
-            <button type="submit" id="submitBtn">Submit</button>
+        <button type="submit" id="submitBtn">Submit</button>
     </form>
-    <script scr="Checker.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('inputForm').addEventListener('submit',function(e) {
+                e.preventDefault();
+                alert('Submit button was clicked');
+            });
+        });
+    </script>
 </html>
