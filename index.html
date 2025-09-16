@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css"> <!-- Reference to the CSS stylesheet -->
-    <title>Glitch Form</title>
+    <link rel="stylesheet" href="style.css"> <title>Glitch Form</title>
 </head>
 <body style="background-color:#0d0d0d;">
     <div class="glitch-form-wrapper">
@@ -30,57 +29,51 @@
                     <input type="password" id="password" name="password" required="" placeholder="" />
                     <label for="password" class="form-label" data-text="ACCESS_KEY">ACCESS_KEY</label>
                 </div>
-               
-      <div class = "form-group">
-        <input
-          type="timedate-local"
-          id = "timedate"
-          name="timedate"
-          required=""
-          placeholder=""
-        \>
-      <label for="timedate" class = "form-label" data-text="TIME_DATE">TIME_DATE</label>
-      </div>
-      <div class = "form-group">
-        <input
-          type="text"
-          id="message"
-          name="message"
-          required=""
-          placeholder=""
-        />
-        <label for="message" class = "form-label" data-text="MESSAGE">MESSAGE</label>
-      </div>
-                  </div>
                 
-                <button data-text="INITIATE_CONNECTION" type="submit" class="submit-btn">
-                    <span class="btn-text">INITIATE_CONNECTION</span>
-                </button>
+                <div class="form-group">
+                    <input type="datetime-local" id="timedate" name="timedate" required="" placeholder="" />
+                    <label for="timedate" class="form-label" data-text="TIME_DATE">TIME_DATE</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="message" name="message" required="" placeholder="" />
+                    <label for="message" class="form-label" data-text="MESSAGE">MESSAGE</label>
+                </div>
             </div>
+            
+            <button data-text="INITIATE_CONNECTION" type="submit" class="submit-btn">
+                <span class="btn-text">INITIATE_CONNECTION</span>
+            </button>
         </form>
     </div>
     <script>
         function handleSubmit(event) {
             event.preventDefault();
-            const username = document.getElementById('username').value;
-            const accessKey = document.getElementById('password').value;
-            const dateTime = new Date().toISOString();
-            const message = "Your message here"; // Replace with actual message if needed
+            
+            const form = event.target;
+            const data = {
+                username: form.username.value,
+                accessKey: form.password.value,
+                timedate: form.timedate.value,
+                message: form.message.value
+            };
 
-            const data = `${message}|${dateTime}|${accessKey}`;
-            fetch('https://script.google.com/macros/s/AKfycbz75Gzhpclf1nXn_fDbIKtkGhFFhY3zoUXSFkQluI4GKcFRlPjnPmGdhNbR3GFe087Y/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbzyala7YVHOvuKfL13tdwgj4Awh_ZIwCXiL9QxRJ5Exd-4EqNakdxy0rtoBh57mpeoQ/exec', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ data: data })
+                body: JSON.stringify(data)
             })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
+            .then(response => response.json()) // Change from .text() to .json()
+            .then(result => {
+                alert(result.message);
+                if (result.success) {
+                    form.reset(); // Clear the form on success
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
+                alert('An error occurred. Please try again.');
             });
         }
     </script>
