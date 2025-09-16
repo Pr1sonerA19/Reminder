@@ -3,4 +3,4 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
     alert('Submit');
   });
-);
+});
