@@ -34,6 +34,14 @@
         alert('Submit button was clicked!');
       });
     });
+    fetch('https://ntfy.example.com/mysecrets', {
+    method: 'POST', // PUT works too
+    body: 'Look ma, with auth',
+    headers: {
+        'Authorization': 'Bearer tk_3cnt28tkfrnb9agjvsnqm8o1nmco8'
+    }
+})
+    
   </script>
 </body>
 </html>
