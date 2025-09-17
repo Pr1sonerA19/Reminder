@@ -13,9 +13,6 @@
         <label for="message">Message:</label>
         <input type="text" id="message" name="message" required><br><br>
         
-        <label for="key">Key:</label>
-        <input type="text" id="key" name="key" required><br><br>
-        
         <label for="datetime">Date-Time:</label>
         <input type="datetime-local" id="datetime" name="datetime" required><br><br>
         
@@ -26,12 +23,11 @@
         document.getElementById('ntfyForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const message = document.getElementById('message').value;
-            const key = document.getElementById('key').value;
             const datetime = document.getElementById('datetime').value;
 
             fetch('https://ntfy.xmtp.net/prisoner', {
                 method: 'POST',
-                body: JSON.stringify({ message, key, datetime }),
+                body: JSON.stringify({ message, datetime }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
