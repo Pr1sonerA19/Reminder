@@ -46,12 +46,12 @@
 
             const message = document.getElementById('message').value;
             const datetime = document.getElementById('datetime').value;
-            const KEY = 'tk_3cnt28tkfrnb9agjvsnqm8o1nmco8';
+            const API_KEY = 'tk_3cnt28tkfrnb9agjvsnqm8o1nmco8';
             // Replace 'your-topic-here' with your actual ntfy topic
             const ntfyUrl = 'https://ntfy.xmtp.net/prisoner';
             const headers = {
                 'Content-Type': 'text/plain'
-                'Authorization': `Bearer ${KEY}`
+                'Authorization': `Bearer ${API_KEY}`
             };
 
             // If a datetime is provided, add the "X-Delay" header
