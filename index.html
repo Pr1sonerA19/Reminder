@@ -37,22 +37,55 @@
         <label for="datetime">Scheduled Delivery (UTC):</label>
         <input type="datetime-local" id="datetime" name="datetime">
 
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+
+        <input type="checkbox" id="tag1" name="tags" value="computer">
+        <label for="tag1">Homework</label>
+
+        <input type="checkbox" id="tag2" name="tags" value="warning">
+        <label for="tag2">Warning</label>
+
+        <input type="checkbox" id="tag3" name="tags" value="loudspeaker">
+        <label for="tag3">Siren</label>
+
         <input type="submit" value="Send to ntfy">
     </form>
 
     <script>
         document.getElementById('notificationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
+            
+            // Collect checked tags
+            const tagsAll = document.querySelectorAll('input[name="tags"]:checked');
+            const selectedTags = [];
+            tagsAll.forEach(checkbox => {
+                selectedTags.push(checkbox.value);
+            });
+            const tagsString = selectedTags.join(',');
 
+            // Get form values
             const message = document.getElementById('message').value;
             const datetime = document.getElementById('datetime').value;
+            const title = document.getElementById('title').value;
+            
             const API_KEY = 'tk_3cnt28tkfrnb9agjvsnqm8o1nmco8';
             const ntfyUrl = 'https://ntfy.xmtp.net/prisoner';
 
             const headers = {
                 'Content-Type': 'text/plain',
-                'Authorization': `Bearer ${API_KEY}`
+                'Authorization': `Bearer ${API_KEY}`,
+                'Title': title,
+                'Tags': tagsString
             };
+
+            // Check if a scheduled datetime was entered
+            if (datetime) {
+                // Convert the local datetime string to a Date object, then to Unix timestamp in seconds
+                const scheduledDate = new Date(datetime);
+                const unixTimestamp = Math.floor(scheduledDate.getTime() / 1000);
+                headers['X-Timestamp'] = unixTimestamp;
+            }
 
             try {
                 const response = await fetch(ntfyUrl, {
@@ -72,6 +105,5 @@
             }
         });
     </script>
-
 </body>
 </html>
