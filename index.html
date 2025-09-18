@@ -47,22 +47,12 @@
             const message = document.getElementById('message').value;
             const datetime = document.getElementById('datetime').value;
             const API_KEY = 'tk_3cnt28tkfrnb9agjvsnqm8o1nmco8';
-            // Replace 'your-topic-here' with your actual ntfy topic
             const ntfyUrl = 'https://ntfy.xmtp.net/prisoner';
+
             const headers = {
-                'Content-Type': 'text/plain'
+                'Content-Type': 'text/plain',
                 'Authorization': `Bearer ${API_KEY}`
             };
-
-            // If a datetime is provided, add the "X-Delay" header
-            if (datetime) {
-                const now = new Date();
-                const scheduledTime = new Date(datetime);
-                const delayInSeconds = Math.floor((scheduledTime - now) / 1000);
-                if (delayInSeconds > 0) {
-                    headers['X-Delay'] = `${delayInSeconds}s`;
-                }
-            }
 
             try {
                 const response = await fetch(ntfyUrl, {
