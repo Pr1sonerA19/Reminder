@@ -64,7 +64,7 @@
             }
 
             try {
-                const response = await fetch("ntfy.xtmp.net/prisoner", {
+                const response = await fetch(ntfyUrl, {
                     method: 'PUT',
                     headers: headers,
                     body: message
