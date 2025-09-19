@@ -85,7 +85,7 @@
                 // Convert the local datetime string to a Date object, then to Unix timestamp in seconds
                 const scheduledDate = new Date(datetime);
                 const unixTimestamp = Math.floor(scheduledDate.getTime() / 1000);
-                headers['X-Timestamp'] = unixTimestamp;
+                headers['X-Delay'] = unixTimestamp;
             }
 
             try {
