@@ -3,60 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ntfy Form</title>
+    <title>Ntfy Data Intercept // Glitch</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: sans-serif;
-            margin: 20px;
+        /* Define Glitch Colors */
+        :root {
+            --glitch-main: #00ff6a;    /* Neon Green */
+            --glitch-shadow: #ff00ff; /* Magenta */
+            --glitch-bg: #000000;      /* PURE Black Background for contrast */
         }
-        form {
-            max-width: 400px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+
+        /* ---------------------------------- */
+        /* Core Styling and Full Viewport Fix */
+        /* ---------------------------------- */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
-        label, input {
-            display: block;
+        
+        body { 
+            font-family: 'Major Mono Display', monospace; 
+            background-color: var(--glitch-bg);
+            color: var(--glitch-main);
+            overflow: hidden; /* Prevent body scroll from card shifting */
+        }
+
+        /* ---------------------------------- */
+        /* 1. Core Card Styling and Shifting  */
+        /* ---------------------------------- */
+        .glitch-card {
+            background: var(--glitch-bg);
+            border: 4px solid var(--glitch-main);
+            box-shadow: 0 0 30px rgba(0, 255, 106, 0.4), 0 0 15px rgba(255, 0, 255, 0.5);
+            animation: card-shift 8s infinite alternate-reverse step-end;
+            transition: all 0.1s;
+        }
+
+        /* Card shifting animation */
+        @keyframes card-shift {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+            5% { clip-path: inset(40% 0 30% 0); transform: translate(-3px, 0); }
+            10% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+            51% { clip-path: inset(20% 0 70% 0); transform: translate(-5px, 0); }
+            52% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+        }
+
+
+        /* ---------------------------------- */
+        /* 2. Text and Heading Glitch Effect  */
+        /* ---------------------------------- */
+        @keyframes text-flicker {
+            0% { opacity: 0.8; text-shadow: 2px 0 1px var(--glitch-shadow), -2px 0 1px var(--glitch-main); }
+            4% { opacity: 0.9; text-shadow: 1px 0 1px var(--glitch-shadow), -1px 0 1px var(--glitch-main); }
+            9% { opacity: 0.7; text-shadow: 3px 0 1px var(--glitch-shadow), -3px 0 1px var(--glitch-main); }
+            10% { opacity: 1; text-shadow: 0 0 10px var(--glitch-main); }
+            100% { opacity: 1; text-shadow: 0 0 5px var(--glitch-main); }
+        }
+
+        .glitch-text {
+            position: relative;
+            animation: text-flicker 3s infinite alternate;
+            text-shadow: 0 0 5px var(--glitch-main);
+        }
+
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text); 
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            box-sizing: border-box;
-            margin-bottom: 10px;
+            height: 100%;
+            text-shadow: none;
         }
-        input[type="submit"] {
-            margin-top: 15px;
+
+        .glitch-text::before {
+            color: var(--glitch-shadow);
+            z-index: -1;
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
         }
+
+        .glitch-text::after {
+            color: var(--glitch-main);
+            z-index: -2;
+            animation: glitch-anim-2 2.5s infinite linear alternate;
+        }
+
+        /* Glitch layer animations */
+        @keyframes glitch-anim-1 {
+            0% { transform: translate(1px, -1px); clip-path: inset(20% 0 80% 0); opacity: 0.8; }
+            50% { transform: translate(2px, 0); clip-path: inset(40% 0 40% 0); opacity: 0.9; }
+            100% { transform: translate(0, 0); clip-path: inset(0 0 100% 0); opacity: 1; }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { transform: translate(-2px, 2px); clip-path: inset(10% 0 70% 0); opacity: 0.7; }
+            50% { transform: translate(-1px, 1px); clip-path: inset(50% 0 30% 0); opacity: 0.8; }
+            100% { transform: translate(0, 0); clip-path: inset(0 0 0 0); opacity: 1; }
+        }
+
+        /* ---------------------------------- */
+        /* 3. Input Styling                   */
+        /* ---------------------------------- */
+
+        .glitch-input {
+            background: transparent;
+            border: 2px solid var(--glitch-main);
+            color: var(--glitch-main);
+            transition: all 0.1s ease-in-out;
+            box-shadow: 0 0 5px var(--glitch-main);
+            appearance: none; 
+        }
+        .glitch-input::placeholder {
+            color: rgba(0, 255, 106, 0.6);
+        }
+
+        /* Focus state adds a shadow and color shift */
+        .glitch-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--glitch-shadow), 0 0 8px var(--glitch-main);
+            border-color: var(--glitch-shadow);
+            transform: scale(1.005);
+        }
+        
+        /* Fix for date/time arrows in some browsers */
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1); /* Makes indicator white/light */
+            cursor: pointer;
+        }
+
+        /* ---------------------------------- */
+        /* 4. Custom Checkbox Styling         */
+        /* ---------------------------------- */
+
+        /* Hide default checkbox */
+        .glitch-checkbox-container input[type="checkbox"] {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .glitch-checkbox-container label {
+            cursor: pointer;
+            padding-left: 2rem; 
+            position: relative;
+            display: inline-block;
+            line-height: 1.5rem;
+            transition: color 0.2s;
+        }
+
+        /* Custom box for the checkbox */
+        .glitch-checkbox-container label::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid var(--glitch-main);
+            background: rgba(0, 255, 106, 0.1);
+            transition: all 0.2s;
+            box-shadow: 0 0 4px var(--glitch-main);
+        }
+
+        /* Checked state */
+        .glitch-checkbox-container input[type="checkbox"]:checked + label::before {
+            background: var(--glitch-shadow);
+            border-color: var(--glitch-shadow);
+            box-shadow: 0 0 15px var(--glitch-shadow), 0 0 5px var(--glitch-main);
+        }
+        
+        /* Checkmark */
+        .glitch-checkbox-container input[type="checkbox"]:checked + label::after {
+            content: '>'; /* ASCII checkmark */
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--glitch-main);
+            font-size: 1.2rem;
+            animation: text-flicker 1.5s infinite alternate;
+        }
+        
+        /* Utility classes for JS feedback */
+        .text-glitch-shadow { color: var(--glitch-shadow); }
+        .text-glitch-success { color: var(--glitch-main); }
+        .text-glitch-error { color: #ff3333; } /* Red for errors */
+
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-    <h2>Send a Notification</h2>
+    <!-- Main Container: Centered, Dark, Monospace -->
+    <div class="min-h-screen flex items-center justify-center p-4">
+        
+        <!-- Glitch Card -->
+        <div id="glitch-card" class="glitch-card relative w-full max-w-lg p-8 rounded-xl overflow-hidden">
+            
+            <header class="mb-8 text-center">
+                <h1 
+                    class="glitch-text text-4xl font-bold mb-2 uppercase" 
+                    data-text="NTFY DATA INJECTOR"
+                >
+                    NTFY DATA INJECTOR
+                </h1>
+                <p class="text-xs opacity-75">--// SECURE CHANNEL REQUIRED //--</p>
+            </header>
 
-    <form id="notificationForm">
-        <!-- Title here -->
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required>
-        <!-- Message here -->
-        <label for="message">Message:</label>
-        <input type="text" id="message" name="message" required>
-        <!-- Date and time here -->
-        <label for="datetime">Scheduled Delivery (UTC):</label>
-        <input type="datetime-local" id="datetime" name="datetime">
-        <!-- Tags -->
-        <input type="checkbox" id="tag1" name="tags" value="computer">
-        <label for="tag1">Homework</label>
+            <form id="notificationForm" onsubmit="event.preventDefault();">
+                
+                <!-- Title Input -->
+                <div class="mb-6">
+                    <label for="title" class="block mb-2 text-sm">TITLE SEGMENT</label>
+                    <input 
+                        type="text" 
+                        id="title" 
+                        name="title" 
+                        placeholder="[NOTIFICATION SUBJECT]" 
+                        class="glitch-input w-full p-3 rounded-md text-sm"
+                        required
+                    >
+                </div>
 
-        <input type="checkbox" id="tag2" name="tags" value="warning">
-        <label for="tag2">Warning</label>
+                <!-- Message Input -->
+                <div class="mb-6">
+                    <label for="message" class="block mb-2 text-sm">MESSAGE PAYLOAD</label>
+                    <textarea 
+                        id="message" 
+                        name="message" 
+                        rows="4" 
+                        placeholder="[CONTENT BODY]" 
+                        class="glitch-input w-full p-3 rounded-md text-sm resize-none"
+                        required
+                    ></textarea>
+                </div>
 
-        <input type="checkbox" id="tag3" name="tags" value="loudspeaker">
-        <label for="tag3">Siren</label>
+                <!-- NEW: Ntfy Topic Input -->
+                <div class="mb-6">
+                    <label for="topic" class="block mb-2 text-sm">NTFY TOPIC/TARGET</label>
+                    <input 
+                        type="text" 
+                        id="topic" 
+                        name="topic" 
+                        placeholder="[REQUIRED TOPIC NAME]" 
+                        value="prisoner" 
+                        class="glitch-input w-full p-3 rounded-md text-sm"
+                        required
+                    >
+                </div>
+                
+                <!-- NEW: API Key Input (Password) -->
+                <div class="mb-6">
+                    <label for="key" class="block mb-2 text-sm">API ACCESS KEY (BEARER)</label>
+                    <input 
+                        type="password" 
+                        id="key" 
+                        name="key" 
+                        placeholder="[YOUR TK_... API KEY]" 
+                        class="glitch-input w-full p-3 rounded-md text-sm"
+                        required
+                    >
+                </div>
 
-        <input type="submit" value="Send to ntfy">
-    </form>
+                <!-- Scheduled Delivery Input -->
+                <div class="mb-6">
+                    <label for="datetime" class="block mb-2 text-sm">SCHEDULED DELIVERY (UTC)</label>
+                    <input 
+                        type="datetime-local" 
+                        id="datetime" 
+                        name="datetime" 
+                        class="glitch-input w-full p-3 rounded-md text-sm"
+                    >
+                </div>
+                
+                <!-- Checkboxes - Tags -->
+                <div class="mb-8 border-t border-b border-glitch-main/50 pt-4 pb-2">
+                    <p class="mb-3 text-sm font-bold opacity-80">TAG MODIFIERS</p>
+                    <div class="space-y-3">
+                        
+                        <!-- Checkbox 1: Homework/Computer -->
+                        <div class="glitch-checkbox-container">
+                            <input type="checkbox" id="tag1" name="tags" value="computer">
+                            <label for="tag1" class="text-sm">HOMEWORK [COMPUTER]</label>
+                        </div>
+
+                        <!-- Checkbox 2: Warning -->
+                        <div class="glitch-checkbox-container">
+                            <input type="checkbox" id="tag2" name="tags" value="warning">
+                            <label for="tag2" class="text-sm">WARNING</label>
+                        </div>
+
+                        <!-- Checkbox 3: Siren/Loudspeaker -->
+                        <div class="glitch-checkbox-container">
+                            <input type="checkbox" id="tag3" name="tags" value="loudspeaker">
+                            <label for="tag3" class="text-sm">SIREN [LOUDSPEAKER]</label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Submission Button -->
+                <button 
+                    type="submit" 
+                    class="glitch-btn w-full py-3 bg-glitch-main text-gray-900 font-extrabold rounded-md shadow-lg border-2 border-glitch-main hover:bg-transparent hover:text-glitch-main"
+                >
+                    <span class="glitch-text" data-text="TRANSMIT DATA">TRANSMIT DATA</span>
+                </button>
+                
+                <!-- Status Message -->
+                <div class="mt-6 p-2 text-center text-xs border border-glitch-main/30 rounded-md">
+                    <p id="status-message" class="text-glitch-main">AWAITING INPUT...</p>
+                </div>
+            </form>
+
+        </div>
+    </div>
 
     <script>
         document.getElementById('notificationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             
+            const statusMessageEl = document.getElementById('status-message');
+            statusMessageEl.innerHTML = '<span class="text-glitch-shadow">INITIATING...</span> // PROCESSING TRANSMISSION...';
+
             // Collect checked tags
             const tagsAll = document.querySelectorAll('input[name="tags"]:checked');
             const selectedTags = [];
@@ -65,28 +339,32 @@
             });
             const tagsString = selectedTags.join(',');
 
-            // Get form values
+            // Get form values, including the newly added topic and key
             const message = document.getElementById('message').value;
             const datetime = document.getElementById('datetime').value;
             const title = document.getElementById('title').value;
-            
-            const API_KEY = 'tk_3cnt28tkfrnb9agjvsnqm8o1nmco8';
-            const ntfyUrl = 'https://ntfy.xmtp.net/prisoner';
+            const topic = document.getElementById('topic').value; // Get topic
+            const key = document.getElementById('key').value;     // Get key
 
+            // --- Dynamic URL Construction ---
+            const ntfyUrl = `https://ntfy.xmtp.net/${topic}`;
+            // --- Authorization Header uses the input key ---
             const headers = {
                 'Content-Type': 'text/plain',
-                'Authorization': `Bearer ${API_KEY}`,
+                'Authorization': `Bearer ${key}`, 
                 'Title': title,
                 'Tags': tagsString
             };
 
             // Check if a scheduled datetime was entered
             if (datetime) {
-                // Convert the local datetime string to a Date object, then to Unix timestamp in seconds
                 const scheduledDate = new Date(datetime);
+                if (isNaN(scheduledDate.getTime())) {
+                     statusMessageEl.innerHTML = '<span class="text-glitch-error">ERROR: Invalid Schedule Time.</span>';
+                     return;
+                }
                 const unixTimestamp = Math.floor(scheduledDate.getTime() / 1000);
                 headers['X-Delay'] = unixTimestamp;
-                console.log(unixTimestamp);
             }
 
             try {
@@ -97,12 +375,16 @@
                 });
 
                 if (response.ok) {
-                    alert('Notification sent successfully!');
+                    statusMessageEl.innerHTML = '<span class="text-glitch-success">SUCCESS: Notification Transmitted.</span> // STATUS 200';
+                    document.getElementById('notificationForm').reset();
+                    // Preserve the Topic and Key fields after reset
+                    document.getElementById('topic').value = topic; 
+                    document.getElementById('key').value = key; 
                 } else {
-                    alert(`Failed to send notification. Status: ${response.status}`);
+                    statusMessageEl.innerHTML = `<span class="text-glitch-error">ERROR: Transmission Failed.</span> // STATUS ${response.status}`;
                 }
             } catch (error) {
-                alert('An error occurred while sending the notification.');
+                statusMessageEl.innerHTML = '<span class="text-glitch-error">FATAL ERROR: Network Interruption.</span>';
                 console.error('Error:', error);
             }
         });
