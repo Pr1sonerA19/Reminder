@@ -20,7 +20,8 @@
         /* Core Styling and Full Viewport Fix */
         /* ---------------------------------- */
         html, body {
-            height: 100%;
+            /* Removing height: 100% on html/body can sometimes help scrolling in complex layouts, 
+               but we rely on min-h-screen for centering, so we keep basic setup */
             margin: 0;
             padding: 0;
         }
@@ -29,7 +30,7 @@
             font-family: 'Major Mono Display', monospace; 
             background-color: var(--glitch-bg);
             color: var(--glitch-main);
-            overflow: hidden; /* Prevent body scroll from card shifting */
+            /* --- CHANGE: Removed 'overflow: hidden;' to allow scrolling --- */
         }
 
         /* ---------------------------------- */
@@ -200,6 +201,8 @@
 <body class="antialiased">
 
     <!-- Main Container: Centered, Dark, Monospace -->
+    <!-- The min-h-screen class ensures the background covers the viewport height, 
+         while removing overflow: hidden allows the content to extend and scroll naturally. -->
     <div class="min-h-screen flex items-center justify-center p-4">
         
         <!-- Glitch Card -->
@@ -243,7 +246,7 @@
                     ></textarea>
                 </div>
 
-                <!-- NEW: Ntfy Topic Input -->
+                <!-- Ntfy Topic Input -->
                 <div class="mb-6">
                     <label for="topic" class="block mb-2 text-sm">NTFY TOPIC/TARGET</label>
                     <input 
@@ -257,7 +260,7 @@
                     >
                 </div>
                 
-                <!-- NEW: API Key Input (Password) -->
+                <!-- API Key Input (Password) -->
                 <div class="mb-6">
                     <label for="key" class="block mb-2 text-sm">API ACCESS KEY (BEARER)</label>
                     <input 
