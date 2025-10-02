@@ -1,0 +1,193 @@
+/* Define Glitch Colors */
+:root {
+    --glitch-main: #00ff6a;    /* Neon Green */
+    --glitch-shadow: #ff00ff; /* Magenta */
+    --glitch-bg: #000000;      /* PURE Black Background for contrast */
+}
+
+/* ---------------------------------- */
+/* Core Styling and Full Viewport Fix */
+/* ---------------------------------- */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body { 
+    /* Inter font for better readability in the body text */
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--glitch-bg);
+    color: var(--glitch-main);
+}
+
+/* ---------------------------------- */
+/* 1. Core Card Styling and Shifting  */
+/* ---------------------------------- */
+.glitch-card {
+    background: var(--glitch-bg);
+    border: 4px solid var(--glitch-main);
+    box-shadow: 0 0 30px rgba(0, 255, 106, 0.4), 0 0 15px rgba(255, 0, 255, 0.5);
+    /* Slower animation (12s) to reduce flickering */
+    animation: card-shift 12s infinite alternate-reverse step-end; 
+    transition: all 0.1s;
+}
+
+/* Card shifting animation */
+@keyframes card-shift {
+    0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+    5% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 0); }
+    10% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+    51% { clip-path: inset(20% 0 70% 0); transform: translate(2px, 0); }
+    52% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
+}
+
+
+/* ---------------------------------- */
+/* 2. Text and Heading Glitch Effect  */
+/* ---------------------------------- */
+.glitch-text {
+    /* Major Mono Display for the glitch aesthetic */
+    font-family: 'Major Mono Display', monospace;
+    position: relative;
+    /* Slower flicker (4s) */
+    animation: text-flicker 4s infinite alternate; 
+    text-shadow: 0 0 5px var(--glitch-main);
+}
+
+@keyframes text-flicker {
+    0% { opacity: 0.9; text-shadow: 1px 0 1px var(--glitch-shadow), -1px 0 1px var(--glitch-main); }
+    4% { opacity: 1; text-shadow: 0 0 10px var(--glitch-main); }
+    9% { opacity: 0.8; text-shadow: 2px 0 1px var(--glitch-shadow), -2px 0 1px var(--glitch-main); }
+    10% { opacity: 1; text-shadow: 0 0 5px var(--glitch-main); }
+    100% { opacity: 1; text-shadow: 0 0 5px var(--glitch-main); }
+}
+
+.glitch-text::before, .glitch-text::after {
+    content: attr(data-text); 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-shadow: none;
+}
+
+.glitch-text::before {
+    color: var(--glitch-shadow);
+    z-index: -1;
+    /* Slower animation (3s) */
+    animation: glitch-anim-1 3s infinite linear alternate-reverse; 
+}
+
+.glitch-text::after {
+    color: var(--glitch-main);
+    z-index: -2;
+    /* Slower animation (3.5s) */
+    animation: glitch-anim-2 3.5s infinite linear alternate; 
+}
+
+/* Glitch layer animations */
+@keyframes glitch-anim-1 {
+    0% { transform: translate(1px, -1px); clip-path: inset(20% 0 80% 0); opacity: 0.8; }
+    50% { transform: translate(0, 0); clip-path: inset(40% 0 40% 0); opacity: 0.9; }
+    100% { transform: translate(0, 0); clip-path: inset(0 0 100% 0); opacity: 1; }
+}
+
+@keyframes glitch-anim-2 {
+    0% { transform: translate(-1px, 1px); clip-path: inset(10% 0 70% 0); opacity: 0.7; }
+    50% { transform: translate(0, 0); clip-path: inset(50% 0 30% 0); opacity: 0.8; }
+    100% { transform: translate(0, 0); clip-path: inset(0 0 0 0); opacity: 1; }
+}
+
+/* ---------------------------------- */
+/* 3. Input Styling                   */
+/* ---------------------------------- */
+
+.glitch-input {
+    background: transparent;
+    border: 2px solid var(--glitch-main);
+    /* Ensure input uses the readable font */
+    font-family: 'Inter', sans-serif;
+    color: var(--glitch-main);
+    transition: all 0.1s ease-in-out;
+    box-shadow: 0 0 5px var(--glitch-main);
+    appearance: none; 
+}
+.glitch-input::placeholder {
+    color: rgba(0, 255, 106, 0.6);
+}
+
+/* Focus state adds a shadow and color shift */
+.glitch-input:focus {
+    outline: none;
+    box-shadow: 0 0 15px var(--glitch-shadow), 0 0 8px var(--glitch-main);
+    border-color: var(--glitch-shadow);
+    transform: scale(1.005);
+}
+
+/* Fix for date/time arrows in some browsers */
+::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Makes indicator white/light */
+    cursor: pointer;
+}
+
+/* ---------------------------------- */
+/* 4. Custom Checkbox Styling         */
+/* ---------------------------------- */
+
+/* Hide default checkbox */
+.glitch-checkbox-container input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.glitch-checkbox-container label {
+    cursor: pointer;
+    padding-left: 2rem; 
+    position: relative;
+    display: inline-block;
+    line-height: 1.5rem;
+    transition: color 0.2s;
+}
+
+/* Custom box for the checkbox */
+.glitch-checkbox-container label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--glitch-main);
+    background: rgba(0, 255, 106, 0.1);
+    transition: all 0.2s;
+    box-shadow: 0 0 4px var(--glitch-main);
+}
+
+/* Checked state */
+.glitch-checkbox-container input[type="checkbox"]:checked + label::before {
+    background: var(--glitch-shadow);
+    border-color: var(--glitch-shadow);
+    box-shadow: 0 0 15px var(--glitch-shadow), 0 0 5px var(--glitch-main);
+}
+
+/* Checkmark */
+.glitch-checkbox-container input[type="checkbox"]:checked + label::after {
+    content: '>'; /* ASCII checkmark */
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--glitch-main);
+    font-size: 1.2rem;
+    /* Slower flicker (2.5s) */
+    animation: text-flicker 2.5s infinite alternate; 
+}
+
+/* Utility classes for JS feedback */
+.text-glitch-shadow { color: var(--glitch-shadow); }
+.text-glitch-success { color: var(--glitch-main); }
+.text-glitch-error { color: #ff3333; } /* Red for errors */
