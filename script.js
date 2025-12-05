@@ -2,7 +2,7 @@ document.getElementById('notificationForm').addEventListener('submit', async fun
     event.preventDefault();
     
     const statusMessageEl = document.getElementById('status-message');
-    statusMessageEl.innerHTML = '<span class="text-glitch-shadow">INITIATING...</span> // PROCESSING TRANSMISSION...';
+    statusMessageEl.innerHTML = '<span class="text-glitch-shadow">INITIATING...</span> // CALCULATING TIMESTAMPS...';
 
     // Collect checked tags
     const tagsAll = document.querySelectorAll('input[name="tags"]:checked');
@@ -14,42 +14,81 @@ document.getElementById('notificationForm').addEventListener('submit', async fun
 
     // Get form values
     const message = document.getElementById('message').value;
-    const datetime = document.getElementById('datetime').value;
+    const datetimeStr = document.getElementById('datetime').value;
+    // Default to 1 day if empty or invalid
+    const repeatDays = parseInt(document.getElementById('repeatDays').value) || 1; 
     const title = document.getElementById('title').value;
     const topic = document.getElementById('topic').value;
     const key = document.getElementById('key').value;
 
-    // --- Dynamic URL Construction ---
     const ntfyUrl = `https://ntfy.xmtp.net/${topic}`; 
-    // --- Authorization Header uses the input key ---
-    const headers = {
-        'Content-Type': 'text/plain',
-        'Authorization': `Bearer ${key}`,
-        'Title': title,
-        'Tags': tagsString
-    };
 
-    // Check for scheduled delivery
-    if (datetime) {
-        const scheduledDate = new Date(datetime);
-        if (isNaN(scheduledDate.getTime())) {
-             statusMessageEl.innerHTML = '<span class="text-glitch-error">ERROR: Invalid Schedule Time.</span>';
-             return;
-        }
-        const unixTimestamp = Math.floor(scheduledDate.getTime() / 1000);
-        // X-Delay header tells ntfy to schedule the notification
-        headers['X-Delay'] = unixTimestamp;
+    // --- Validation ---
+    // If the user wants to repeat, they MUST select a start time.
+    if (repeatDays > 1 && !datetimeStr) {
+        statusMessageEl.innerHTML = '<span class="text-glitch-error">ERROR: Start Time Required for Loop.</span>';
+        return;
     }
 
-    try {
-        const response = await fetch(ntfyUrl, {
+    // --- Prepare Transmission Loop ---
+    const requests = [];
+    const baseDate = datetimeStr ? new Date(datetimeStr) : null;
+
+    // Loop for X days
+    for (let i = 0; i < repeatDays; i++) {
+        
+        // Dynamic Headers
+        // If repeating, we append (1/X), (2/X) to the title so you know which day it is.
+        const currentTitle = repeatDays > 1 ? `${title} (${i + 1}/${repeatDays})` : title;
+
+        const headers = {
+            'Content-Type': 'text/plain',
+            'Authorization': `Bearer ${key}`,
+            'Title': currentTitle,
+            'Tags': tagsString
+        };
+
+        // Calculate Time Offset
+        if (baseDate) {
+            if (isNaN(baseDate.getTime())) {
+                statusMessageEl.innerHTML = '<span class="text-glitch-error">ERROR: Invalid Schedule Time.</span>';
+                return;
+            }
+
+            // Create a new date object for this iteration: Base Date + i days
+            const scheduledDate = new Date(baseDate);
+            scheduledDate.setDate(baseDate.getDate() + i);
+
+            // Convert to Unix Timestamp (Seconds)
+            const unixTimestamp = Math.floor(scheduledDate.getTime() / 1000);
+            headers['X-Delay'] = unixTimestamp;
+        } else if (i > 0) {
+            // Safety Check: If no date is provided, we cannot repeat "instantly" 
+            // multiple times or it sends spam. We break the loop after the first send.
+            break; 
+        }
+
+        // Push the fetch promise to our array
+        const req = fetch(ntfyUrl, {
             method: 'PUT',
             headers: headers,
             body: message
         });
+        requests.push(req);
+    }
 
-        if (response.ok) {
-            statusMessageEl.innerHTML = '<span class="text-glitch-success">SUCCESS: Notification Transmitted.</span> // STATUS 200';
+    // --- Execute Batch Transmission ---
+    try {
+        statusMessageEl.innerHTML = `<span class="text-glitch-shadow">TRANSMITTING...</span> // PACKETS: ${requests.length}`;
+        
+        // Wait for all requests to finish
+        const responses = await Promise.all(requests);
+        
+        // Check if all were successful
+        const allOk = responses.every(r => r.ok);
+
+        if (allOk) {
+            statusMessageEl.innerHTML = `<span class="text-glitch-success">SUCCESS: ${requests.length} Notifications Queued.</span> // STATUS 200`;
             
             // Store original values before form reset
             const originalTopic = topic;
@@ -57,12 +96,13 @@ document.getElementById('notificationForm').addEventListener('submit', async fun
             
             document.getElementById('notificationForm').reset();
             
-            // Restore the Topic and Key fields after reset for convenience
+            // Restore persistent fields
             document.getElementById('topic').value = originalTopic; 
             document.getElementById('key').value = originalKey; 
+            document.getElementById('repeatDays').value = "1"; // Reset repeats to 1
 
         } else {
-            statusMessageEl.innerHTML = `<span class="text-glitch-error">ERROR: Transmission Failed.</span> // STATUS ${response.status}`;
+            statusMessageEl.innerHTML = `<span class="text-glitch-error">PARTIAL ERROR: Some packets dropped.</span>`;
         }
     } catch (error) {
         statusMessageEl.innerHTML = '<span class="text-glitch-error">FATAL ERROR: Network Interruption.</span>';
