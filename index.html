@@ -78,14 +78,29 @@
                     >
                 </div>
 
-                <div class="mb-6">
-                    <label for="datetime" class="block mb-2 text-sm">SCHEDULED DELIVERY (UTC)</label>
-                    <input 
-                        type="datetime-local" 
-                        id="datetime" 
-                        name="datetime" 
-                        class="glitch-input w-full p-3 rounded-md text-sm"
-                    >
+                <div class="mb-6 grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="datetime" class="block mb-2 text-sm">START TIME (UTC)</label>
+                        <input 
+                            type="datetime-local" 
+                            id="datetime" 
+                            name="datetime" 
+                            class="glitch-input w-full p-3 rounded-md text-sm"
+                        >
+                    </div>
+                    <div>
+                        <label for="repeatDays" class="block mb-2 text-sm">REPEAT (DAYS)</label>
+                        <input 
+                            type="number" 
+                            id="repeatDays" 
+                            name="repeatDays" 
+                            placeholder="1" 
+                            min="1" 
+                            max="365"
+                            value="1"
+                            class="glitch-input w-full p-3 rounded-md text-sm"
+                        >
+                    </div>
                 </div>
                 
                 <div class="mb-8 border-t border-b border-glitch-main/50 pt-4 pb-2">
