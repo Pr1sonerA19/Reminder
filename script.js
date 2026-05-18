@@ -32,7 +32,14 @@ document.getElementById('notificationForm').addEventListener('submit', async fun
 
     // --- Prepare Transmission Loop ---
     const requests = [];
-    const baseDate = datetimeStr ? new Date(datetimeStr) : null;
+    let baseDate = datetimeStr ? new Date(datetimeStr) : null;
+
+    // Apply UTC+1 offset if a date is provided
+    if (baseDate) {
+        // datetime-local gives local time, convert to UTC+1
+        const utc1Offset = baseDate.getTime() + (60 * 60 * 1000); // Add 1 hour
+        baseDate = new Date(utc1Offset);
+    }
 
     // Loop for X days
     for (let i = 0; i < repeatDays; i++) {
@@ -73,6 +80,10 @@ document.getElementById('notificationForm').addEventListener('submit', async fun
             method: 'PUT',
             headers: headers,
             body: message
+        }).catch(error => {
+            // Catch individual request errors and return a failed response
+            console.error('Request error:', error);
+            return { ok: false, error: error };
         });
         requests.push(req);
     }
@@ -85,9 +96,10 @@ document.getElementById('notificationForm').addEventListener('submit', async fun
         const responses = await Promise.all(requests);
         
         // Check if all were successful
-        const allOk = responses.every(r => r.ok);
+        const allOk = responses.every(r => r && r.ok);
+        const successCount = responses.filter(r => r && r.ok).length;
 
-        if (allOk) {
+        if (allOk && successCount === requests.length) {
             statusMessageEl.innerHTML = `<span class="text-glitch-success">SUCCESS: ${requests.length} Notifications Queued.</span> // STATUS 200`;
             
             // Store original values before form reset
@@ -102,7 +114,7 @@ document.getElementById('notificationForm').addEventListener('submit', async fun
             document.getElementById('repeatDays').value = "1"; // Reset repeats to 1
 
         } else {
-            statusMessageEl.innerHTML = `<span class="text-glitch-error">PARTIAL ERROR: Some packets dropped.</span>`;
+            statusMessageEl.innerHTML = `<span class="text-glitch-error">PARTIAL ERROR: ${successCount}/${requests.length} packets delivered. ${requests.length - successCount} dropped.</span>`;
         }
     } catch (error) {
         statusMessageEl.innerHTML = '<span class="text-glitch-error">FATAL ERROR: Network Interruption.</span>';
